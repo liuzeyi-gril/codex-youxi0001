@@ -1,0 +1,395 @@
+:root {
+  --bg: #070b14;
+  --panel: rgba(20, 30, 51, 0.72);
+  --border: rgba(148, 163, 184, 0.18);
+  --text: #e8eefc;
+  --text-dim: #93a4c4;
+  --green: #34d399;
+  --green-bright: #4ade80;
+  --red: #ef4444;
+  --gold: #fbbf24;
+  --blue: #38bdf8;
+  --radius: 16px;
+  --shadow: 0 18px 40px rgba(2, 6, 23, 0.55);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 24px 14px 40px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  color: var(--text);
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", "Source Han Sans SC", system-ui, -apple-system, "Segoe UI", sans-serif;
+  background:
+    radial-gradient(900px 520px at 50% -12%, rgba(52, 211, 153, 0.18), transparent 62%),
+    radial-gradient(760px 460px at 92% 108%, rgba(56, 130, 246, 0.16), transparent 60%),
+    var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 桌面端用 620px，手机端自动占满可视宽度 */
+.app {
+  width: 100%;
+  max-width: 620px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ---------- 标题 ---------- */
+.app-header {
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(26px, 6vw, 34px);
+  font-weight: 800;
+  letter-spacing: 4px;
+  line-height: 1.2;
+}
+
+.title-icon {
+  margin-right: 8px;
+  font-size: 0.92em;
+}
+
+.title-text {
+  background: linear-gradient(100deg, #d1fae5, #34d399 45%, #38bdf8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+}
+
+/* ---------- 数据面板 ---------- */
+.hud {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.hud-card {
+  padding: 9px 2px;
+  text-align: center;
+  border-radius: 13px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.hud-label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.hud-value {
+  display: block;
+  margin-top: 3px;
+  font-size: 19px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.hud-value.pop {
+  animation: pop 0.35s ease;
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.26); color: var(--green-bright); }
+  100% { transform: scale(1); }
+}
+
+/* ---------- 难度选择 ---------- */
+.difficulty {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 10px 8px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+}
+
+.difficulty-label {
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+}
+
+.segmented {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  flex: 1;
+  max-width: 320px;
+}
+
+.seg-btn {
+  padding: 8px 6px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text-dim);
+  cursor: pointer;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.seg-btn:hover {
+  color: var(--text);
+  background: rgba(148, 163, 184, 0.12);
+}
+
+.seg-btn.is-active {
+  color: #04231a;
+  font-weight: 700;
+  background: linear-gradient(135deg, #34d399, #22d3ee);
+  box-shadow: 0 6px 16px rgba(52, 211, 153, 0.28);
+}
+
+.seg-btn:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+/* ---------- 棋盘 ---------- */
+.board-wrap {
+  position: relative;
+  padding: 8px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(23, 35, 58, 0.9), rgba(12, 20, 36, 0.92));
+  box-shadow: var(--shadow);
+}
+
+#board {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+  background: #0b1220;
+  touch-action: none;
+}
+
+.overlay {
+  position: absolute;
+  inset: 8px;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  text-align: center;
+  border-radius: 12px;
+  background: rgba(7, 11, 20, 0.84);
+  backdrop-filter: blur(6px);
+  transition: opacity 0.22s ease, visibility 0.22s ease;
+}
+
+.overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.overlay-inner {
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.overlay-emoji {
+  margin: 0;
+  font-size: 38px;
+  line-height: 1;
+}
+
+.overlay-title {
+  margin: 0;
+  font-size: 21px;
+  letter-spacing: 1px;
+}
+
+.overlay-text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-dim);
+}
+
+/* ---------- 按钮 ---------- */
+.actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.btn {
+  padding: 12px 10px;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text);
+  cursor: pointer;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  transition: transform 0.12s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.btn:hover {
+  background: rgba(52, 211, 153, 0.12);
+  border-color: rgba(52, 211, 153, 0.4);
+}
+
+.btn:active {
+  transform: translateY(1px) scale(0.985);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  margin-top: 6px;
+  padding: 12px 26px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #04231a;
+  border: none;
+  background: linear-gradient(135deg, #34d399, #22d3ee);
+  box-shadow: 0 10px 24px rgba(52, 211, 153, 0.32);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #4ade80, #38bdf8);
+}
+
+.btn-ghost {
+  color: var(--text-dim);
+}
+
+/* ---------- 触屏方向键 ---------- */
+.pad {
+  display: grid;
+  grid-template-columns: repeat(3, 60px);
+  grid-template-rows: repeat(3, 60px);
+  gap: 10px;
+  justify-content: center;
+}
+
+.pad-btn {
+  font-size: 18px;
+  color: var(--text);
+  cursor: pointer;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  transition: transform 0.1s ease, background 0.2s ease;
+}
+
+.pad-btn:hover {
+  background: rgba(52, 211, 153, 0.14);
+}
+
+.pad-btn:active {
+  transform: scale(0.94);
+  background: rgba(52, 211, 153, 0.28);
+}
+
+.pad-btn:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+.pad-up { grid-area: 1 / 2 / 2 / 3; }
+.pad-left { grid-area: 2 / 1 / 3 / 2; }
+.pad-right { grid-area: 2 / 3 / 3 / 4; }
+.pad-down { grid-area: 3 / 2 / 4 / 3; }
+
+/* ---------- 说明 ---------- */
+.tips {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+
+.tip-item {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.dot-red { background: var(--red); box-shadow: 0 0 8px rgba(239, 68, 68, 0.8); }
+.dot-gold { background: var(--gold); box-shadow: 0 0 8px rgba(251, 191, 36, 0.8); }
+.dot-blue { background: var(--blue); box-shadow: 0 0 8px rgba(56, 189, 248, 0.8); }
+.dot-green { background: var(--green); box-shadow: 0 0 8px rgba(52, 211, 153, 0.8); }
+
+/* ---------- 窄屏适配 ---------- */
+@media (max-width: 430px) {
+  body { padding: 14px 8px 26px; }
+  .app { gap: 12px; }
+  .hud-value { font-size: 16px; }
+  .hud-label { font-size: 10px; letter-spacing: 0; }
+  .subtitle { font-size: 12px; }
+  .difficulty { padding: 6px 8px 6px 10px; gap: 6px; }
+  .difficulty-label { font-size: 12px; }
+  .seg-btn { padding: 8px 2px; font-size: 12px; }
+  .pad { grid-template-columns: repeat(3, 52px); grid-template-rows: repeat(3, 52px); }
+  .btn { padding: 11px 6px; font-size: 13px; }
+  .overlay-emoji { font-size: 30px; }
+  .overlay-title { font-size: 18px; }
+  .overlay-text { font-size: 12px; }
+}
+
+/* ---------- 横屏手机：把方向键收窄，避免一屏放不下 ---------- */
+@media (max-height: 520px) and (orientation: landscape) {
+  .pad { grid-template-columns: repeat(3, 46px); grid-template-rows: repeat(3, 46px); gap: 6px; }
+  .tips { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
